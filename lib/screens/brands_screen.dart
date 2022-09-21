@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
@@ -37,18 +37,15 @@ class _BrandsScreenState extends State<BrandsScreen> {
         title: Text('Marcas'),
         actions: <Widget>[
           _isFiltered
-          ? IconButton(
-              onPressed: _removeFilter, 
-              icon: Icon(Icons.filter_none)
-            )
-          : IconButton(
-              onPressed: _showFilter, 
-              icon: Icon(Icons.filter_alt)
-            )
+              ? IconButton(
+                  onPressed: _removeFilter, icon: Icon(Icons.filter_none))
+              : IconButton(onPressed: _showFilter, icon: Icon(Icons.filter_alt))
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader
+            ? LoaderComponent(text: 'Por favor espere...')
+            : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -68,13 +65,12 @@ class _BrandsScreenState extends State<BrandsScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -86,13 +82,12 @@ class _BrandsScreenState extends State<BrandsScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -102,9 +97,7 @@ class _BrandsScreenState extends State<BrandsScreen> {
   }
 
   Widget _getContent() {
-    return _brands.length == 0 
-      ? _noContent()
-      : _getListView();
+    return _brands.length == 0 ? _noContent() : _getListView();
   }
 
   Widget _noContent() {
@@ -113,12 +106,9 @@ class _BrandsScreenState extends State<BrandsScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-          ? 'No hay marcas con ese criterio de búsqueda.'
-          : 'No hay marcas registradas.',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          ),
+              ? 'No hay marcas con ese criterio de búsqueda.'
+              : 'No hay marcas registradas.',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -141,7 +131,7 @@ class _BrandsScreenState extends State<BrandsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          e.description, 
+                          e.description,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -161,42 +151,39 @@ class _BrandsScreenState extends State<BrandsScreen> {
 
   void _showFilter() {
     showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text('Filtrar Marcas'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Escriba las primeras letras de la marca'),
-              SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Criterio de búsqueda...',
-                  labelText: 'Buscar',
-                  suffixIcon: Icon(Icons.search)
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('Filtrar Marcas'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Escriba las primeras letras de la marca'),
+                SizedBox(
+                  height: 10,
                 ),
-                onChanged: (value) {
-                  _search = value;
-                },
-              )
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Criterio de búsqueda...',
+                      labelText: 'Buscar',
+                      suffixIcon: Icon(Icons.search)),
+                  onChanged: (value) {
+                    _search = value;
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')),
+              TextButton(onPressed: () => _filter(), child: Text('Filtrar')),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), 
-              child: Text('Cancelar')
-            ),
-            TextButton(
-              onPressed: () => _filter(), 
-              child: Text('Filtrar')
-            ),
-          ],
-        );
-      });
+          );
+        });
   }
 
   void _removeFilter() {
@@ -228,14 +215,12 @@ class _BrandsScreenState extends State<BrandsScreen> {
 
   void _goAdd() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => BrandScreen(
-          token: widget.token, 
-          brand: Brand(description: '', id: 0),
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => BrandScreen(
+                  token: widget.token,
+                  brand: Brand(description: '', id: 0),
+                )));
     if (result == 'yes') {
       _getBrands();
     }
@@ -243,14 +228,12 @@ class _BrandsScreenState extends State<BrandsScreen> {
 
   void _goEdit(Brand brand) async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => BrandScreen(
-          token: widget.token, 
-          brand: brand,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => BrandScreen(
+                  token: widget.token,
+                  brand: brand,
+                )));
     if (result == 'yes') {
       _getBrands();
     }

@@ -1,9 +1,11 @@
+// ignore_for_file: unused_field
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:camera/camera.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';

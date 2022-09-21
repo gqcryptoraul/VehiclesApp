@@ -1,5 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicles_app/components/loader_component.dart';
@@ -7,7 +9,7 @@ import 'package:vehicles_app/helpers/api_helper.dart';
 import 'package:vehicles_app/models/response.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
-  const RecoverPasswordScreen({ Key? key }) : super(key: key);
+  const RecoverPasswordScreen({Key? key}) : super(key: key);
 
   @override
   _RecoverPasswordScreenState createState() => _RecoverPasswordScreenState();
@@ -35,7 +37,11 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
               _showButtons(),
             ],
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
         ],
       ),
     );
@@ -52,9 +58,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
           errorText: _emailShowError ? _emailError : null,
           prefixIcon: Icon(Icons.alternate_email),
           suffixIcon: Icon(Icons.email),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _email = value;
@@ -81,18 +85,17 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
         child: Text('Recuperar Contraseña'),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return Color(0xFF120E43);
-            }
-          ),
+              (Set<MaterialState> states) {
+            return Color(0xFF120E43);
+          }),
         ),
-        onPressed: () => _recoverPassword(), 
+        onPressed: () => _recoverPassword(),
       ),
     );
   }
 
   void _recoverPassword() {
-    if(!_validateFields()) {
+    if (!_validateFields()) {
       return;
     }
 
@@ -114,7 +117,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
       _emailShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -129,13 +132,12 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -144,8 +146,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
     };
 
     Response response = await ApiHelper.postNoToken(
-      '/api/Account/RecoverPassword', 
-      request, 
+      '/api/Account/RecoverPassword',
+      request,
     );
 
     setState(() {
@@ -154,24 +156,23 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: 'Se le ha enviado un correo con las instrucciones para recuperar su contraseña',
-      actions: <AlertDialogAction>[
+        context: context,
+        title: 'Confirmación',
+        message:
+            'Se le ha enviado un correo con las instrucciones para recuperar su contraseña',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: null, label: 'Aceptar'),
-      ]
-    );    
+        ]);
 
     Navigator.pop(context);
   }

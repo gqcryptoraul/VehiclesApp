@@ -1,6 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vehicles_app/components/loader_component.dart';
@@ -20,7 +20,11 @@ class VehicleInfoScreen extends StatefulWidget {
   final Vehicle vehicle;
   final bool isAdmin;
 
-  VehicleInfoScreen({required this.token, required this.user, required this.vehicle, required this.isAdmin});
+  VehicleInfoScreen(
+      {required this.token,
+      required this.user,
+      required this.vehicle,
+      required this.isAdmin});
 
   @override
   _VehicleInfoScreenState createState() => _VehicleInfoScreenState();
@@ -39,64 +43,61 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${_vehicle.brand.description} ${_vehicle.line} ${_vehicle.plaque}'),
-      ),
-      body: Center(
-        child: _showLoader 
-          ? LoaderComponent(text: 'Por favor espere...',) 
-          : _getContent(),
-      ),
-      floatingActionButton: widget.isAdmin 
-        ? FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () => _goAddHistory(History(
-              date: '', 
-              dateLocal: '', 
-              details: [], 
-              detailsCount: 0, 
-              id: 0, 
-              mileage: 0, 
-              remarks: '', 
-              total: 0, 
-              totalLabor: 0, 
-              totalSpareParts: 0
-            )),
-          )
-        : Container()
-    );
+        appBar: AppBar(
+          title: Text(
+              '${_vehicle.brand.description} ${_vehicle.line} ${_vehicle.plaque}'),
+        ),
+        body: Center(
+          child: _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : _getContent(),
+        ),
+        floatingActionButton: widget.isAdmin
+            ? FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () => _goAddHistory(History(
+                    date: '',
+                    dateLocal: '',
+                    details: [],
+                    detailsCount: 0,
+                    id: 0,
+                    mileage: 0,
+                    remarks: '',
+                    total: 0,
+                    totalLabor: 0,
+                    totalSpareParts: 0)),
+              )
+            : Container());
   }
 
   void _goHistory(History history) async {
-    String? result = await  Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => HistoryInfoScreen(
-          token: widget.token, 
-          user: widget.user, 
-          vehicle: _vehicle, 
-          history: history,
-          isAdmin: widget.isAdmin,
-        ) 
-      )
-    );
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HistoryInfoScreen(
+                  token: widget.token,
+                  user: widget.user,
+                  vehicle: _vehicle,
+                  history: history,
+                  isAdmin: widget.isAdmin,
+                )));
     if (result == 'yes') {
       await _getVehicle();
     }
   }
 
   void _goAddHistory(History history) async {
-    String? result = await  Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => HistoryScreen(
-          token: widget.token, 
-          user: widget.user, 
-          vehicle: _vehicle, 
-          history: history,
-        ) 
-      )
-    );
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HistoryScreen(
+                  token: widget.token,
+                  user: widget.user,
+                  vehicle: _vehicle,
+                  history: history,
+                )));
     if (result == 'yes') {
       await _getVehicle();
     }
@@ -138,25 +139,24 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
                 ),
               ),
               Positioned(
-                bottom: 0,
-                left: 60,
-                child: InkWell(
-                  onTap: () => _goEdit(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      color: Colors.green[50],
-                      height: 40,
-                      width: 40,
-                      child: Icon(
-                        Icons.edit,
-                        size: 30,
-                        color: Colors.blue,
+                  bottom: 0,
+                  left: 60,
+                  child: InkWell(
+                    onTap: () => _goEdit(),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        color: Colors.green[50],
+                        height: 40,
+                        width: 40,
+                        child: Icon(
+                          Icons.edit,
+                          size: 30,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              )
+                  ))
             ],
           ),
           Expanded(
@@ -171,133 +171,117 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
+                            Text('Tipo de vehículo: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Tipo de vehículo: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.vehicleType.description, 
+                              _vehicle.vehicleType.description,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Marca: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Marca: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.brand.description, 
+                              _vehicle.brand.description,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Modelo: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Modelo: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.model.toString(), 
+                              _vehicle.model.toString(),
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Placa: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Placa: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.plaque, 
+                              _vehicle.plaque,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Línea: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Línea: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.line, 
+                              _vehicle.line,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Color: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Color: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.color, 
+                              _vehicle.color,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Comentarios: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Comentarios: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.remarks == null ? 'NA' : _vehicle.remarks!, 
+                              _vehicle.remarks == null
+                                  ? 'NA'
+                                  : _vehicle.remarks!,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('# Historias: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              '# Historias: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _vehicle.historiesCount.toString(), 
+                              _vehicle.historiesCount.toString(),
                               style: TextStyle(
                                 fontSize: 14,
                               ),
@@ -330,81 +314,83 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  '${DateFormat('yyyy-MM-dd').format(DateTime.parse(e.dateLocal))}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
+                        child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '${DateFormat('yyyy-MM-dd').format(DateTime.parse(e.dateLocal))}',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${e.mileage} Kms.',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${e.mileage} Kms.',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    e.remarks == null ? 'NA' : e.remarks!,
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                    SizedBox(width: 5,),
-                                    Text(
-                                      e.remarks == null ? 'NA' : e.remarks!,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Mano de obra: ${NumberFormat.currency(symbol: '\$').format(e.totalLabor)}',
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Mano de obra: ${NumberFormat.currency(symbol: '\$').format(e.totalLabor)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Repuestos: ${NumberFormat.currency(symbol: '\$').format(e.totalSpareParts)}',
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Repuestos: ${NumberFormat.currency(symbol: '\$').format(e.totalSpareParts)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Total: ${NumberFormat.currency(symbol: '\$').format(e.total)}',
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Total: ${NumberFormat.currency(symbol: '\$').format(e.total)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ),
-                    Icon(Icons.arrow_forward_ios, size: 40,)
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 40,
+                    )
                   ],
                 ),
               ),
             ),
           );
         }).toList(),
-      ), 
+      ),
     );
   }
 
@@ -425,15 +411,13 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
   void _goEdit() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => VehicleScreen(
-          token: widget.token, 
-          user: widget.user, 
-          vehicle: _vehicle,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => VehicleScreen(
+                  token: widget.token,
+                  user: widget.user,
+                  vehicle: _vehicle,
+                )));
     if (result == 'yes') {
       await _getVehicle();
     }
@@ -450,17 +434,17 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
-    Response response = await ApiHelper.getVehicle(widget.token, _vehicle.id.toString());
+    Response response =
+        await ApiHelper.getVehicle(widget.token, _vehicle.id.toString());
 
     setState(() {
       _showLoader = false;
@@ -468,13 +452,12 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 

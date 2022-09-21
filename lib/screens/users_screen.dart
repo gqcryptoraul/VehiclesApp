@@ -1,6 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
@@ -40,18 +40,15 @@ class _UsersScreenState extends State<UsersScreen> {
         title: Text('Usuarios'),
         actions: <Widget>[
           _isFiltered
-          ? IconButton(
-              onPressed: _removeFilter, 
-              icon: Icon(Icons.filter_none)
-            )
-          : IconButton(
-              onPressed: _showFilter, 
-              icon: Icon(Icons.filter_alt)
-            )
+              ? IconButton(
+                  onPressed: _removeFilter, icon: Icon(Icons.filter_none))
+              : IconButton(onPressed: _showFilter, icon: Icon(Icons.filter_alt))
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader
+            ? LoaderComponent(text: 'Por favor espere...')
+            : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -71,13 +68,12 @@ class _UsersScreenState extends State<UsersScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -89,13 +85,12 @@ class _UsersScreenState extends State<UsersScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -105,9 +100,7 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Widget _getContent() {
-    return _users.length == 0 
-      ? _noContent()
-      : _getListView();
+    return _users.length == 0 ? _noContent() : _getListView();
   }
 
   Widget _noContent() {
@@ -116,12 +109,9 @@ class _UsersScreenState extends State<UsersScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-          ? 'No hay usuarios con ese criterio de búsqueda.'
-          : 'No hay usuarios registradas.',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          ),
+              ? 'No hay usuarios con ese criterio de búsqueda.'
+              : 'No hay usuarios registradas.',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -165,22 +155,25 @@ class _UsersScreenState extends State<UsersScreen> {
                             Column(
                               children: [
                                 Text(
-                                  e.fullName, 
+                                  e.fullName,
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold
-                                  ),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
-                                  e.email, 
+                                  e.email,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
-                                  '+${e.countryCode} ${e.phoneNumber}', 
+                                  '+${e.countryCode} ${e.phoneNumber}',
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
@@ -204,42 +197,40 @@ class _UsersScreenState extends State<UsersScreen> {
 
   void _showFilter() {
     showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text('Filtrar Usuarios'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Escriba las primeras letras del nombre o apellidos del usuario'),
-              SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Criterio de búsqueda...',
-                  labelText: 'Buscar',
-                  suffixIcon: Icon(Icons.search)
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('Filtrar Usuarios'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                    'Escriba las primeras letras del nombre o apellidos del usuario'),
+                SizedBox(
+                  height: 10,
                 ),
-                onChanged: (value) {
-                  _search = value;
-                },
-              )
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Criterio de búsqueda...',
+                      labelText: 'Buscar',
+                      suffixIcon: Icon(Icons.search)),
+                  onChanged: (value) {
+                    _search = value;
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')),
+              TextButton(onPressed: () => _filter(), child: Text('Filtrar')),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), 
-              child: Text('Cancelar')
-            ),
-            TextButton(
-              onPressed: () => _filter(), 
-              child: Text('Filtrar')
-            ),
-          ],
-        );
-      });
+          );
+        });
   }
 
   void _removeFilter() {
@@ -271,33 +262,30 @@ class _UsersScreenState extends State<UsersScreen> {
 
   void _goAdd() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => UserScreen(
-          token: widget.token, 
-          myProfile: false,
-          user: User(
-            firstName: '', 
-            lastName: '', 
-            documentType: DocumentType(id: 0, description: ''), 
-            document: '', 
-            address: '', 
-            imageId: '', 
-            imageFullPath: '', 
-            userType: 1, 
-            loginType: 0, 
-            fullName: '', 
-            vehicles: [], 
-            vehiclesCount: 0, 
-            id: '', 
-            userName: '', 
-            email: '', 
-            countryCode: '57',
-            phoneNumber: ''
-          ),
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserScreen(
+                  token: widget.token,
+                  myProfile: false,
+                  user: User(
+                      firstName: '',
+                      lastName: '',
+                      documentType: DocumentType(id: 0, description: ''),
+                      document: '',
+                      address: '',
+                      imageId: '',
+                      imageFullPath: '',
+                      userType: 1,
+                      loginType: 0,
+                      fullName: '',
+                      vehicles: [],
+                      vehiclesCount: 0,
+                      id: '',
+                      userName: '',
+                      email: '',
+                      countryCode: '57',
+                      phoneNumber: ''),
+                )));
     if (result == 'yes') {
       _getUsers();
     }
@@ -305,15 +293,13 @@ class _UsersScreenState extends State<UsersScreen> {
 
   void _goInfoUser(User user) async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => UserInfoScreen(
-          token: widget.token, 
-          user: user,
-          isAdmin: true,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserInfoScreen(
+                  token: widget.token,
+                  user: user,
+                  isAdmin: true,
+                )));
     if (result == 'yes') {
       _getUsers();
     }

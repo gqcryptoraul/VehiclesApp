@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,7 +25,8 @@ class UserInfoScreen extends StatefulWidget {
   final User user;
   final bool isAdmin;
 
-  UserInfoScreen({required this.token, required this.user, required this.isAdmin});
+  UserInfoScreen(
+      {required this.token, required this.user, required this.isAdmin});
 
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
@@ -47,27 +50,28 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         title: Text(_user.fullName),
       ),
       body: Center(
-        child: _showLoader 
-          ? LoaderComponent(text: 'Por favor espere...',) 
-          : _getContent(),
+        child: _showLoader
+            ? LoaderComponent(
+                text: 'Por favor espere...',
+              )
+            : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _goAddVehicle(Vehicle(
-          brand: Brand(id: 0, description: ''), 
-          color: '', 
-          histories: [], 
-          historiesCount: 0, 
-          id: 0, 
-          imageFullPath: '', 
-          line: '', 
-          model: 2021, 
-          plaque: '', 
-          remarks: '', 
-          vehiclePhotos: [], 
-          vehiclePhotosCount: 0, 
-          vehicleType: VehicleType(id: 0, description: '')
-        )),
+            brand: Brand(id: 0, description: ''),
+            color: '',
+            histories: [],
+            historiesCount: 0,
+            id: 0,
+            imageFullPath: '',
+            line: '',
+            model: 2021,
+            plaque: '',
+            remarks: '',
+            vehiclePhotos: [],
+            vehiclePhotosCount: 0,
+            vehicleType: VehicleType(id: 0, description: ''))),
       ),
     );
   }
@@ -97,25 +101,24 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
               ),
               Positioned(
-                bottom: 0,
-                left: 60,
-                child: InkWell(
-                  onTap: () => _goEdit(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      color: Colors.green[50],
-                      height: 40,
-                      width: 40,
-                      child: Icon(
-                        Icons.edit,
-                        size: 30,
-                        color: Colors.blue,
+                  bottom: 0,
+                  left: 60,
+                  child: InkWell(
+                    onTap: () => _goEdit(),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        color: Colors.green[50],
+                        height: 40,
+                        width: 40,
+                        child: Icon(
+                          Icons.edit,
+                          size: 30,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              )
+                  ))
             ],
           ),
           Expanded(
@@ -130,106 +133,94 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
+                            Text('Email: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Email: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.email, 
+                              _user.email,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Tipo documento: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Tipo documento: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.documentType.description, 
+                              _user.documentType.description,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Documento: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Documento: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.document, 
+                              _user.document,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Dirección: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Dirección: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.address, 
+                              _user.address,
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('Teléfono: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              'Teléfono: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              '+${_user.countryCode} ${_user.phoneNumber}', 
+                              '+${_user.countryCode} ${_user.phoneNumber}',
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: <Widget>[
+                            Text('# Vehículos: ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                              '# Vehículos: ', 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
-                            Text(
-                              _user.vehiclesCount.toString(), 
+                              _user.vehiclesCount.toString(),
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         widget.isAdmin ? _showCallButtons() : Container()
                       ],
                     ),
@@ -245,16 +236,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   void _goEdit() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => UserScreen(
-          token: widget.token, 
-          user: _user,
-          myProfile: false,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserScreen(
+                  token: widget.token,
+                  user: _user,
+                  myProfile: false,
+                )));
     if (result == 'yes') {
+      // ignore: todo
       //TODO: Pending refresh user info
     }
   }
@@ -270,13 +260,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -288,13 +277,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -303,34 +291,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     });
   }
 
-  void _goVehicle(Vehicle vehicle) async { 
-    String? result = await  Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => VehicleInfoScreen(
-          token: widget.token, 
-          user: _user, 
-          vehicle: vehicle,
-          isAdmin: widget.isAdmin,
-        ) 
-      )
-    );
+  void _goVehicle(Vehicle vehicle) async {
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VehicleInfoScreen(
+                  token: widget.token,
+                  user: _user,
+                  vehicle: vehicle,
+                  isAdmin: widget.isAdmin,
+                )));
     if (result == 'yes') {
       _getUser();
     }
   }
 
-  void _goAddVehicle(Vehicle vehicle) async { 
-    String? result = await  Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => VehicleScreen(
-          token: widget.token, 
-          user: _user, 
-          vehicle: vehicle
-        ) 
-      )
-    );
+  void _goAddVehicle(Vehicle vehicle) async {
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VehicleScreen(
+                token: widget.token, user: _user, vehicle: vehicle)));
     if (result == 'yes') {
       _getUser();
     }
@@ -374,68 +355,72 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  e.plaque,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold
+                        child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                e.plaque,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    e.vehicleType.description,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      e.vehicleType.description,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    e.brand.description,
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                    SizedBox(width: 5,),
-                                    Text(
-                                      e.brand.description,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    e.line,
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      e.line,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    e.color,
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                    SizedBox(width: 5,),
-                                    Text(
-                                      e.color,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ),
-                    Icon(Icons.arrow_forward_ios, size: 40,)
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 40,
+                    )
                   ],
                 ),
               ),
             ),
           );
         }).toList(),
-      ), 
+      ),
     );
   }
 
@@ -458,41 +443,53 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 40,
-              width: 40,
-              color: Colors.blue,
-              child: IconButton(
-                icon: Icon(Icons.call, color: Colors.white,),
-                onPressed: () => launch('tel://+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}'), 
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            height: 40,
+            width: 40,
+            color: Colors.blue,
+            child: IconButton(
+              icon: Icon(
+                Icons.call,
+                color: Colors.white,
               ),
+              onPressed: () => launch(
+                  'tel://+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}'),
             ),
-          ),       
-          SizedBox(width: 10,),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 40,
-              width: 40,
-              color: Colors.green,
-              child: IconButton(
-                icon: Icon(Icons.insert_comment, color: Colors.white,),
-                onPressed: () => _sendMessage(), 
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            height: 40,
+            width: 40,
+            color: Colors.green,
+            child: IconButton(
+              icon: Icon(
+                Icons.insert_comment,
+                color: Colors.white,
               ),
+              onPressed: () => _sendMessage(),
             ),
-          ),       
-          SizedBox(width: 10,),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
       ],
     );
   }
 
   void _sendMessage() async {
     final link = WhatsAppUnilink(
-      phoneNumber: '+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}',
+      phoneNumber:
+          '+${widget.user.countryCode}${RegexHelper.removeBlankSpaces(widget.user.phoneNumber)}',
       text: 'Hola te escribo del taller.',
     );
-    await launch('$link');  
+    await launch('$link');
   }
 }

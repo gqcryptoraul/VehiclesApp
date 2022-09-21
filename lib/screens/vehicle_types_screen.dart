@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
@@ -37,18 +37,15 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
         title: Text('Tipos de vehículo'),
         actions: <Widget>[
           _isFiltered
-          ? IconButton(
-              onPressed: _removeFilter, 
-              icon: Icon(Icons.filter_none)
-            )
-          : IconButton(
-              onPressed: _showFilter, 
-              icon: Icon(Icons.filter_alt)
-            )
+              ? IconButton(
+                  onPressed: _removeFilter, icon: Icon(Icons.filter_none))
+              : IconButton(onPressed: _showFilter, icon: Icon(Icons.filter_alt))
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader
+            ? LoaderComponent(text: 'Por favor espere...')
+            : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -68,13 +65,12 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -86,13 +82,12 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -102,9 +97,7 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
   }
 
   Widget _getContent() {
-    return _vehicleTypes.length == 0 
-      ? _noContent()
-      : _getListView();
+    return _vehicleTypes.length == 0 ? _noContent() : _getListView();
   }
 
   Widget _noContent() {
@@ -113,12 +106,9 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-          ? 'No hay tipos de vehículo con ese criterio de búsqueda.'
-          : 'No hay tipos de vehículo registrados.',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          ),
+              ? 'No hay tipos de vehículo con ese criterio de búsqueda.'
+              : 'No hay tipos de vehículo registrados.',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -141,7 +131,7 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          e.description, 
+                          e.description,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -161,42 +151,39 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
 
   void _showFilter() {
     showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text('Filtrar Tipos de Vehículo'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Escriba las primeras letras del tipo de vehículo'),
-              SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Criterio de búsqueda...',
-                  labelText: 'Buscar',
-                  suffixIcon: Icon(Icons.search)
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('Filtrar Tipos de Vehículo'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Escriba las primeras letras del tipo de vehículo'),
+                SizedBox(
+                  height: 10,
                 ),
-                onChanged: (value) {
-                  _search = value;
-                },
-              )
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Criterio de búsqueda...',
+                      labelText: 'Buscar',
+                      suffixIcon: Icon(Icons.search)),
+                  onChanged: (value) {
+                    _search = value;
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')),
+              TextButton(onPressed: () => _filter(), child: Text('Filtrar')),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), 
-              child: Text('Cancelar')
-            ),
-            TextButton(
-              onPressed: () => _filter(), 
-              child: Text('Filtrar')
-            ),
-          ],
-        );
-      });
+          );
+        });
   }
 
   void _removeFilter() {
@@ -213,7 +200,9 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
 
     List<VehicleType> filteredList = [];
     for (var vehicleType in _vehicleTypes) {
-      if (vehicleType.description.toLowerCase().contains(_search.toLowerCase())) {
+      if (vehicleType.description
+          .toLowerCase()
+          .contains(_search.toLowerCase())) {
         filteredList.add(vehicleType);
       }
     }
@@ -228,14 +217,12 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
 
   void _goAdd() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => VehicleTypeScreen(
-          token: widget.token, 
-          vehicleType: VehicleType(description: '', id: 0),
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => VehicleTypeScreen(
+                  token: widget.token,
+                  vehicleType: VehicleType(description: '', id: 0),
+                )));
     if (result == 'yes') {
       _getVehicleTypes();
     }
@@ -243,14 +230,12 @@ class _VehicleTypesScreenState extends State<VehicleTypesScreen> {
 
   void _goEdit(VehicleType vehicleType) async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => VehicleTypeScreen(
-          token: widget.token, 
-          vehicleType: vehicleType,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => VehicleTypeScreen(
+                  token: widget.token,
+                  vehicleType: vehicleType,
+                )));
     if (result == 'yes') {
       _getVehicleTypes();
     }

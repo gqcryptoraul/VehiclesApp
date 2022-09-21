@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -23,7 +23,8 @@ class VehicleScreen extends StatefulWidget {
   final User user;
   final Vehicle vehicle;
 
-  VehicleScreen({required this.token, required this.user, required this.vehicle});
+  VehicleScreen(
+      {required this.token, required this.user, required this.vehicle});
 
   @override
   _VehicleScreenState createState() => _VehicleScreenState();
@@ -81,11 +82,9 @@ class _VehicleScreenState extends State<VehicleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.vehicle.id == 0
-            ? 'Nuevo vehiculo' 
-            : '${widget.vehicle.brand.description} ${widget.vehicle.line} ${widget.vehicle.plaque}'
-        ),
+        title: Text(widget.vehicle.id == 0
+            ? 'Nuevo vehiculo'
+            : '${widget.vehicle.brand.description} ${widget.vehicle.line} ${widget.vehicle.plaque}'),
       ),
       body: Stack(
         children: [
@@ -104,55 +103,56 @@ class _VehicleScreenState extends State<VehicleScreen> {
               ],
             ),
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
         ],
       ),
     );
   }
 
   Widget _showPhoto() {
-    return widget.vehicle.id == 0
-      ? _showUniquePhoto()
-      : _showPhotosCarousel();
+    return widget.vehicle.id == 0 ? _showUniquePhoto() : _showPhotosCarousel();
   }
 
   Widget _showUniquePhoto() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          child: widget.vehicle.id == 0 && !_photoChanged
+    return Stack(children: <Widget>[
+      Container(
+        margin: EdgeInsets.only(top: 10),
+        child: widget.vehicle.id == 0 && !_photoChanged
             ? Image(
                 image: AssetImage('assets/noimage.png'),
                 height: 160,
                 width: 160,
                 fit: BoxFit.cover,
-              ) 
+              )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: _photoChanged 
-                ? Image.file(
-                    File(_image.path),
-                    height: 160,
-                    width: 160,
-                    fit: BoxFit.cover,
-                  ) 
-                : CachedNetworkImage(
-                    imageUrl: widget.vehicle.imageFullPath,
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                    fit: BoxFit.cover,
-                    height: 160,
-                    width: 160,
-                    placeholder: (context, url) => Image(
-                      image: AssetImage('assets/vehicles_logo.png'),
-                      fit: BoxFit.cover,
-                      height: 160,
-                      width: 160,
-                    ),
-                  ),
-              ),        
-        ),
-        Positioned(
+                child: _photoChanged
+                    ? Image.file(
+                        File(_image.path),
+                        height: 160,
+                        width: 160,
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: widget.vehicle.imageFullPath,
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.cover,
+                        height: 160,
+                        width: 160,
+                        placeholder: (context, url) => Image(
+                          image: AssetImage('assets/vehicles_logo.png'),
+                          fit: BoxFit.cover,
+                          height: 160,
+                          width: 160,
+                        ),
+                      ),
+              ),
+      ),
+      Positioned(
           bottom: 0,
           left: 100,
           child: InkWell(
@@ -170,9 +170,8 @@ class _VehicleScreenState extends State<VehicleScreen> {
                 ),
               ),
             ),
-          )
-        ),
-        Positioned(
+          )),
+      Positioned(
           bottom: 0,
           left: 0,
           child: InkWell(
@@ -190,60 +189,55 @@ class _VehicleScreenState extends State<VehicleScreen> {
                 ),
               ),
             ),
-          )
-        ),
-      ] 
-    );
+          )),
+    ]);
   }
 
   Widget _showVehicleType() {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: _vehicleTypes.length == 0 
-        ? Text('Cargando tipos de vehículos...')
-        : DropdownButtonFormField(
-            items: _getComboVehicleTypes(),
-            value: _vehicleTypeId,
-            onChanged: (option) {
-              setState(() {
-                _vehicleTypeId = option as int;
-              });
-            },
-            decoration: InputDecoration(
-              hintText: 'Seleccione un tipo de vehículo...',
-              labelText: 'Tipo vehículo',
-              errorText: _vehicleTypeIdShowError ? _vehicleTypeIdError : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-            ),
-          )
-    );
+        padding: EdgeInsets.all(10),
+        child: _vehicleTypes.length == 0
+            ? Text('Cargando tipos de vehículos...')
+            : DropdownButtonFormField(
+                items: _getComboVehicleTypes(),
+                value: _vehicleTypeId,
+                onChanged: (option) {
+                  setState(() {
+                    _vehicleTypeId = option as int;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Seleccione un tipo de vehículo...',
+                  labelText: 'Tipo vehículo',
+                  errorText:
+                      _vehicleTypeIdShowError ? _vehicleTypeIdError : null,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ));
   }
 
   Widget _showBrand() {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: _vehicleTypes.length == 0 
-        ? Text('Cargando marcas de vehículos...')
-        : DropdownButtonFormField(
-            items: _getComboBrands(),
-            value: _brandId,
-            onChanged: (option) {
-              setState(() {
-                _brandId = option as int;
-              });
-            },
-            decoration: InputDecoration(
-              hintText: 'Seleccione una marca...',
-              labelText: 'Marca',
-              errorText: _brandIdShowError ? _brandIdError : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-            ),
-          )
-    );
+        padding: EdgeInsets.all(10),
+        child: _vehicleTypes.length == 0
+            ? Text('Cargando marcas de vehículos...')
+            : DropdownButtonFormField(
+                items: _getComboBrands(),
+                value: _brandId,
+                onChanged: (option) {
+                  setState(() {
+                    _brandId = option as int;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Seleccione una marca...',
+                  labelText: 'Marca',
+                  errorText: _brandIdShowError ? _brandIdError : null,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ));
   }
 
   Widget _showModel() {
@@ -257,9 +251,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           labelText: 'Modelo',
           errorText: _modelShowError ? _modelError : null,
           suffixIcon: Icon(Icons.event),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _model = value;
@@ -278,9 +270,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           labelText: 'Placa',
           errorText: _plaqueShowError ? _plaqueError : null,
           suffixIcon: Icon(Icons.directions_car),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _plaque = value;
@@ -299,9 +289,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           labelText: 'Línea',
           errorText: _lineShowError ? _lineError : null,
           suffixIcon: Icon(Icons.directions_car_filled),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _line = value;
@@ -320,9 +308,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           labelText: 'Color',
           errorText: _colorShowError ? _colorError : null,
           suffixIcon: Icon(Icons.palette),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _color = value;
@@ -341,9 +327,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           labelText: 'Comentarios',
           errorText: _remarksShowError ? _remarksError : null,
           suffixIcon: Icon(Icons.notes),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _remarks = value;
@@ -363,32 +347,32 @@ class _VehicleScreenState extends State<VehicleScreen> {
               child: Text('Guardar'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFF120E43);
+                }),
               ),
-              onPressed: () => _save(), 
+              onPressed: () => _save(),
             ),
           ),
-          widget.vehicle.id == 0 
-            ? Container() 
-            : SizedBox(width: 20,),
-          widget.vehicle.id == 0 
-            ? Container() 
-            : Expanded(
-                child: ElevatedButton(
-                  child: Text('Borrar'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
+          widget.vehicle.id == 0
+              ? Container()
+              : SizedBox(
+                  width: 20,
+                ),
+          widget.vehicle.id == 0
+              ? Container()
+              : Expanded(
+                  child: ElevatedButton(
+                    child: Text('Borrar'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
                         return Color(0xFFB4161B);
-                      }
+                      }),
                     ),
+                    onPressed: () => _confirmDelete(),
                   ),
-                  onPressed: () => _confirmDelete(), 
-              ),
-          ),
+                ),
         ],
       ),
     );
@@ -406,27 +390,24 @@ class _VehicleScreenState extends State<VehicleScreen> {
           AlertDialogAction(key: 'front', label: 'Delantera'),
           AlertDialogAction(key: 'back', label: 'Trasera'),
           AlertDialogAction(key: 'cancel', label: 'Cancelar'),
-        ]
-    );
- 
+        ]);
+
     if (responseCamera == 'cancel') {
       return;
     }
- 
+
     if (responseCamera == 'back') {
       camera = cameras.first;
     }
- 
+
     if (responseCamera == 'front') {
       camera = cameras.last;
     }
- 
+
     Response? response = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TakePictureScreen(camera: camera)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => TakePictureScreen(camera: camera)));
     if (response != null) {
       setState(() {
         _photoChanged = true;
@@ -457,13 +438,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -475,13 +455,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -492,13 +471,13 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
   List<DropdownMenuItem<int>> _getComboVehicleTypes() {
     List<DropdownMenuItem<int>> list = [];
-    
+
     list.add(DropdownMenuItem(
       child: Text('Seleccione un tipo de vehículo...'),
       value: 0,
     ));
 
-    _vehicleTypes.forEach((vehicleType) { 
+    _vehicleTypes.forEach((vehicleType) {
       list.add(DropdownMenuItem(
         child: Text(vehicleType.description),
         value: vehicleType.id,
@@ -510,13 +489,13 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
   List<DropdownMenuItem<int>> _getComboBrands() {
     List<DropdownMenuItem<int>> list = [];
-    
+
     list.add(DropdownMenuItem(
       child: Text('Seleccione una marca...'),
       value: 0,
     ));
 
-    _brands.forEach((brand) { 
+    _brands.forEach((brand) {
       list.add(DropdownMenuItem(
         child: Text(brand.description),
         value: brand.id,
@@ -537,13 +516,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -555,13 +533,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -579,15 +556,14 @@ class _VehicleScreenState extends State<VehicleScreen> {
   }
 
   void _confirmDelete() async {
-    var response =  await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿Estas seguro de querer borrar el registro?',
-      actions: <AlertDialogAction>[
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message: '¿Estas seguro de querer borrar el registro?',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: 'no', label: 'No'),
           AlertDialogAction(key: 'yes', label: 'Sí'),
-      ]
-    );    
+        ]);
 
     if (response == 'yes') {
       _deleteRecord();
@@ -605,21 +581,17 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     Response response = await ApiHelper.delete(
-      '/api/Vehicles/', 
-      widget.vehicle.id.toString(), 
-      widget.token
-    );
+        '/api/Vehicles/', widget.vehicle.id.toString(), widget.token);
 
     setState(() {
       _showLoader = false;
@@ -627,13 +599,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -698,7 +669,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
       _plaqueShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -713,13 +684,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -741,11 +711,8 @@ class _VehicleScreenState extends State<VehicleScreen> {
       'image': base64Image,
     };
 
-    Response response = await ApiHelper.post(
-      '/api/Vehicles/', 
-      request, 
-      widget.token
-    );
+    Response response =
+        await ApiHelper.post('/api/Vehicles/', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -753,13 +720,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -777,18 +743,17 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     Map<String, dynamic> request = {
-      'id' : widget.vehicle.id,
+      'id': widget.vehicle.id,
       'vehicleTypeId': _vehicleTypeId,
       'brandId': _brandId,
       'model': _model,
@@ -800,11 +765,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
     };
 
     Response response = await ApiHelper.put(
-      '/api/Vehicles/', 
-      widget.vehicle.id.toString(),
-      request, 
-      widget.token
-    );
+        '/api/Vehicles/', widget.vehicle.id.toString(), request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -812,13 +773,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -830,19 +790,19 @@ class _VehicleScreenState extends State<VehicleScreen> {
     _brandId = widget.vehicle.brand.id;
 
     _model = widget.vehicle.model.toString();
-    _modelController.text = _model;   
+    _modelController.text = _model;
 
     _plaque = widget.vehicle.plaque;
-    _plaqueController.text = _plaque;   
+    _plaqueController.text = _plaque;
 
     _line = widget.vehicle.line;
-    _lineController.text = _line;   
+    _lineController.text = _line;
 
     _color = widget.vehicle.color;
-    _colorController.text = _color;   
+    _colorController.text = _color;
 
     _remarks = widget.vehicle.remarks == null ? '' : widget.vehicle.remarks!;
-    _remarksController.text = _remarks;   
+    _remarksController.text = _remarks;
   }
 
   Widget _showPhotosCarousel() {
@@ -852,40 +812,39 @@ class _VehicleScreenState extends State<VehicleScreen> {
         children: [
           CarouselSlider(
             options: CarouselOptions(
-              height: 200,
-              autoPlay: true,
-              autoPlayInterval: Duration(seconds: 3),
-              enlargeCenterPage: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              }
-            ),
+                height: 200,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 3),
+                enlargeCenterPage: true,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                }),
             carouselController: _carouselController,
             items: widget.vehicle.vehiclePhotos.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child:  ClipRRect(
-                       borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
-                        imageUrl: i.imageFullPath,
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.cover,
-                        height: 300,
-                        width: 300,
-                        placeholder: (context, url) => Image(
-                          image: AssetImage('assets/vehicles_logo.png'),
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: CachedNetworkImage(
+                          imageUrl: i.imageFullPath,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                           fit: BoxFit.cover,
                           height: 300,
                           width: 300,
+                          placeholder: (context, url) => Image(
+                            image: AssetImage('assets/vehicles_logo.png'),
+                            fit: BoxFit.cover,
+                            height: 300,
+                            width: 300,
+                          ),
                         ),
-                      ),
-                    )
-                  );
+                      ));
                 },
               );
             }).toList(),
@@ -909,7 +868,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
               );
             }).toList(),
           ),
-          _showImageButtons()        
+          _showImageButtons()
         ],
       ),
     );
@@ -938,15 +897,16 @@ class _VehicleScreenState extends State<VehicleScreen> {
               ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFF120E43);
+                }),
               ),
-              onPressed: () => _goAddPhoto(), 
+              onPressed: () => _goAddPhoto(),
             ),
           ),
-          SizedBox(width: 20,),
+          SizedBox(
+            width: 20,
+          ),
           Expanded(
             child: ElevatedButton(
               child: Row(
@@ -958,12 +918,11 @@ class _VehicleScreenState extends State<VehicleScreen> {
               ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFFB4161B);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFFB4161B);
+                }),
               ),
-              onPressed: () => _confirmDeletePhoto(), 
+              onPressed: () => _confirmDeletePhoto(),
             ),
           ),
         ],
@@ -973,19 +932,18 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
   void _goAddPhoto() async {
     var response = await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿De donde deseas obtener la imagen?',
-      actions: <AlertDialogAction>[
+        context: context,
+        title: 'Confirmación',
+        message: '¿De donde deseas obtener la imagen?',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: 'cancel', label: 'Cancelar'),
           AlertDialogAction(key: 'camera', label: 'Cámara'),
           AlertDialogAction(key: 'gellery', label: 'Imágenes'),
-      ]
-    );   
+        ]);
 
     if (response == 'cancel') {
       return;
-    } 
+    }
 
     if (response == 'camera') {
       await _takePicture();
@@ -999,15 +957,14 @@ class _VehicleScreenState extends State<VehicleScreen> {
   }
 
   void _confirmDeletePhoto() async {
-    var response =  await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿Estas seguro de querer borrar la última foto tomada?',
-      actions: <AlertDialogAction>[
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message: '¿Estas seguro de querer borrar la última foto tomada?',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: 'no', label: 'No'),
           AlertDialogAction(key: 'yes', label: 'Sí'),
-      ]
-    );    
+        ]);
 
     if (response == 'yes') {
       _deletePhoto();
@@ -1025,13 +982,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -1043,11 +999,8 @@ class _VehicleScreenState extends State<VehicleScreen> {
       'image': base64Image
     };
 
-    Response response = await ApiHelper.post(
-      '/api/VehiclePhotoes',
-      request,
-      widget.token
-    );
+    Response response =
+        await ApiHelper.post('/api/VehiclePhotoes', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -1055,13 +1008,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -1079,21 +1031,20 @@ class _VehicleScreenState extends State<VehicleScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     Response response = await ApiHelper.delete(
-      '/api/VehiclePhotoes/', 
-      widget.vehicle.vehiclePhotos[widget.vehicle.vehiclePhotos.length - 1].id.toString(), 
-      widget.token
-    );
+        '/api/VehiclePhotoes/',
+        widget.vehicle.vehiclePhotos[widget.vehicle.vehiclePhotos.length - 1].id
+            .toString(),
+        widget.token);
 
     setState(() {
       _showLoader = false;
@@ -1101,13 +1052,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 

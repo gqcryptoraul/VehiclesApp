@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -17,7 +17,7 @@ import 'package:vehicles_app/screens/recover_password_screen.dart';
 import 'package:vehicles_app/screens/register_user_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({ Key? key }) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -47,9 +47,13 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 40,),
+                SizedBox(
+                  height: 40,
+                ),
                 _showLogo(),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 _showEmail(),
                 _showPassword(),
                 _showRememberme(),
@@ -58,7 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...') : Container(),
+          _showLoader
+              ? LoaderComponent(text: 'Por favor espere...')
+              : Container(),
         ],
       ),
     );
@@ -85,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
           errorText: _emailShowError ? _emailError : null,
           prefixIcon: Icon(Icons.alternate_email),
           suffixIcon: Icon(Icons.email),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _email = value;
@@ -109,16 +113,16 @@ class _LoginScreenState extends State<LoginScreen> {
           errorText: _passwordShowError ? _passwordError : null,
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            icon: _passwordShow
+                ? Icon(Icons.visibility)
+                : Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            }, 
+            },
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _password = value;
@@ -131,11 +135,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return CheckboxListTile(
       title: Text('Recordarme'),
       value: _rememberme,
-      onChanged: (value) {  
+      onChanged: (value) {
         setState(() {
           _rememberme = value!;
         });
-      }, 
+      },
     );
   }
 
@@ -148,7 +152,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _showLoginButton(),
-              SizedBox(width: 20,),
+              SizedBox(
+                width: 20,
+              ),
               _showRegisterButton(),
             ],
           ),
@@ -164,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordShow = false;
     });
 
-    if(!_validateFields()) {
+    if (!_validateFields()) {
       return;
     }
 
@@ -178,13 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -197,8 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
     var response = await http.post(
       url,
       headers: {
-        'content-type' : 'application/json',
-        'accept' : 'application/json',
+        'content-type': 'application/json',
+        'accept': 'application/json',
       },
       body: jsonEncode(request),
     );
@@ -207,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoader = false;
     });
 
-    if(response.statusCode >= 400) {
+    if (response.statusCode >= 400) {
       setState(() {
         _passwordShowError = true;
         _passwordError = "Email o contraseña incorrectos";
@@ -224,11 +229,11 @@ class _LoginScreenState extends State<LoginScreen> {
     var decodedJson = jsonDecode(body);
     var token = Token.fromJson(decodedJson);
     Navigator.pushReplacement(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(token: token,)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  token: token,
+                )));
   }
 
   bool _validateFields() {
@@ -253,12 +258,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (_password.length < 6) {
       isValid = false;
       _passwordShowError = true;
-      _passwordError = 'Debes ingresar una contraseña de al menos 6 carácteres.';
+      _passwordError =
+          'Debes ingresar una contraseña de al menos 6 carácteres.';
     } else {
       _passwordShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -268,12 +274,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text('Iniciar Sesión'),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return Color(0xFF120E43);
-            }
-          ),
+              (Set<MaterialState> states) {
+            return Color(0xFF120E43);
+          }),
         ),
-        onPressed: () => _login(), 
+        onPressed: () => _login(),
       ),
     );
   }
@@ -284,12 +289,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text('Nuevo Usuario'),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return Color(0xFFE03B8B);
-            }
-          ),
+              (Set<MaterialState> states) {
+            return Color(0xFFE03B8B);
+          }),
         ),
-        onPressed: () => _register(), 
+        onPressed: () => _register(),
       ),
     );
   }
@@ -302,11 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _register() {
     Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => RegisterUserScreen()
-      )
-    );
+        context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
   }
 
   Widget _showForgotPassword() {
@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
-          '¿Has olvidado tu contraseña?', 
+          '¿Has olvidado tu contraseña?',
           style: TextStyle(color: Colors.blue),
         ),
       ),
@@ -323,31 +323,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _goForgotPassword() {
-    Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => RecoverPasswordScreen()
-      )
-    );
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RecoverPasswordScreen()));
   }
 
   Widget _showGoogleLoginButton() {
     return Row(
       children: <Widget>[
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => _loginGoogle(), 
-            icon: FaIcon(
-              FontAwesomeIcons.google,
-              color: Colors.red,
-            ), 
-            label: Text('Iniciar sesión con Google'),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.white,
-              onPrimary: Colors.black
-            )
-          )
-        )
+            child: ElevatedButton.icon(
+                onPressed: () => _loginGoogle(),
+                icon: FaIcon(
+                  FontAwesomeIcons.google,
+                  color: Colors.red,
+                ),
+                label: Text('Iniciar sesión con Google'),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black, backgroundColor: Colors.white)))
       ],
     );
   }
@@ -365,15 +357,15 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _showLoader = false;
       });
- 
+
       await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: 'Hubo un problema al obtener el usuario de Google, por favor intenta más tarde.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message:
+              'Hubo un problema al obtener el usuario de Google, por favor intenta más tarde.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -392,19 +384,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => _loginFacebook(), 
-            icon: FaIcon(
-              FontAwesomeIcons.facebook,
-              color: Colors.white,
-            ), 
-            label: Text('Iniciar sesión con Facebook'),
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xFF3B5998),
-              onPrimary: Colors.white
-            )
-          )
-        )
+            child: ElevatedButton.icon(
+                onPressed: () => _loginFacebook(),
+                icon: FaIcon(
+                  FontAwesomeIcons.facebook,
+                  color: Colors.white,
+                ),
+                label: Text('Iniciar sesión con Facebook'),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white, backgroundColor: Color(0xFF3B5998))))
       ],
     );
   }
@@ -423,20 +411,21 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _showLoader = false;
       });
- 
+
       await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: 'Hubo un problema al obtener el usuario de Facebook, por favor intenta más tarde.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message:
+              'Hubo un problema al obtener el usuario de Facebook, por favor intenta más tarde.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     final requestData = await FacebookAuth.i.getUserData(
-      fields: "email, name, picture.width(800).heigth(800), first_name, last_name",
+      fields:
+          "email, name, picture.width(800).heigth(800), first_name, last_name",
     );
 
     var picture = requestData['picture'];
@@ -461,8 +450,8 @@ class _LoginScreenState extends State<LoginScreen> {
     var response = await http.post(
       url,
       headers: {
-        'content-type' : 'application/json',
-        'accept' : 'application/json',
+        'content-type': 'application/json',
+        'accept': 'application/json',
       },
       body: bodyRequest,
     );
@@ -471,15 +460,15 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoader = false;
     });
 
-    if(response.statusCode >= 400) {
+    if (response.statusCode >= 400) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'El usuario ya inció sesión previamente por email o por otra red social.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message:
+              'El usuario ya inció sesión previamente por email o por otra red social.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -492,10 +481,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var decodedJson = jsonDecode(body);
     var token = Token.fromJson(decodedJson);
     Navigator.pushReplacement(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(token: token,)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  token: token,
+                )));
   }
 }

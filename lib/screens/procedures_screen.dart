@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -38,18 +38,15 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
         title: Text('Procedimientos'),
         actions: <Widget>[
           _isFiltered
-          ? IconButton(
-              onPressed: _removeFilter, 
-              icon: Icon(Icons.filter_none)
-            )
-          : IconButton(
-              onPressed: _showFilter, 
-              icon: Icon(Icons.filter_alt)
-            )
+              ? IconButton(
+                  onPressed: _removeFilter, icon: Icon(Icons.filter_none))
+              : IconButton(onPressed: _showFilter, icon: Icon(Icons.filter_alt))
         ],
       ),
       body: Center(
-        child: _showLoader ? LoaderComponent(text: 'Por favor espere...') : _getContent(),
+        child: _showLoader
+            ? LoaderComponent(text: 'Por favor espere...')
+            : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -69,13 +66,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -87,13 +83,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -103,9 +98,7 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
   }
 
   Widget _getContent() {
-    return _procedures.length == 0 
-      ? _noContent()
-      : _getListView();
+    return _procedures.length == 0 ? _noContent() : _getListView();
   }
 
   Widget _noContent() {
@@ -114,12 +107,9 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-          ? 'No hay procedimientos con ese criterio de búsqueda.'
-          : 'No hay procedimientos registrados.',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          ),
+              ? 'No hay procedimientos con ese criterio de búsqueda.'
+              : 'No hay procedimientos registrados.',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -142,7 +132,7 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          e.description, 
+                          e.description,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -150,11 +140,13 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
                         Icon(Icons.arrow_forward_ios),
                       ],
                     ),
-                    SizedBox(height: 5,),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Row(
                       children: [
                         Text(
-                          '${NumberFormat.currency(symbol: '\$').format(e.price)}', 
+                          '${NumberFormat.currency(symbol: '\$').format(e.price)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -173,42 +165,39 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
 
   void _showFilter() {
     showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text('Filtrar Procedimientos'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Escriba las primeras letras del procedimiento'),
-              SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Criterio de búsqueda...',
-                  labelText: 'Buscar',
-                  suffixIcon: Icon(Icons.search)
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('Filtrar Procedimientos'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Escriba las primeras letras del procedimiento'),
+                SizedBox(
+                  height: 10,
                 ),
-                onChanged: (value) {
-                  _search = value;
-                },
-              )
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Criterio de búsqueda...',
+                      labelText: 'Buscar',
+                      suffixIcon: Icon(Icons.search)),
+                  onChanged: (value) {
+                    _search = value;
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')),
+              TextButton(onPressed: () => _filter(), child: Text('Filtrar')),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), 
-              child: Text('Cancelar')
-            ),
-            TextButton(
-              onPressed: () => _filter(), 
-              child: Text('Filtrar')
-            ),
-          ],
-        );
-      });
+          );
+        });
   }
 
   void _removeFilter() {
@@ -240,14 +229,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
 
   void _goAdd() async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => ProcedureScreen(
-          token: widget.token, 
-          procedure: Procedure(description: '', id: 0, price: 0),
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProcedureScreen(
+                  token: widget.token,
+                  procedure: Procedure(description: '', id: 0, price: 0),
+                )));
     if (result == 'yes') {
       _getProcedures();
     }
@@ -255,14 +242,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
 
   void _goEdit(Procedure procedure) async {
     String? result = await Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => ProcedureScreen(
-          token: widget.token, 
-          procedure: procedure,
-        )
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProcedureScreen(
+                  token: widget.token,
+                  procedure: procedure,
+                )));
     if (result == 'yes') {
       _getProcedures();
     }

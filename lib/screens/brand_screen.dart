@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
@@ -38,10 +38,7 @@ class _BrandScreenState extends State<BrandScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.brand.id == 0 
-            ? 'Nuevo marca' 
-            : widget.brand.description
-        ),
+            widget.brand.id == 0 ? 'Nuevo marca' : widget.brand.description),
       ),
       body: Stack(
         children: <Widget>[
@@ -51,7 +48,11 @@ class _BrandScreenState extends State<BrandScreen> {
               _showButtons(),
             ],
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
         ],
       ),
     );
@@ -67,9 +68,7 @@ class _BrandScreenState extends State<BrandScreen> {
           labelText: 'Descripción',
           errorText: _descriptionShowError ? _descriptionError : null,
           suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _description = value;
@@ -89,32 +88,32 @@ class _BrandScreenState extends State<BrandScreen> {
               child: Text('Guardar'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFF120E43);
+                }),
               ),
-              onPressed: () => _save(), 
+              onPressed: () => _save(),
             ),
           ),
-          widget.brand.id == 0 
-            ? Container() 
-            : SizedBox(width: 20,),
-          widget.brand.id == 0 
-            ? Container() 
-            : Expanded(
-                child: ElevatedButton(
-                  child: Text('Borrar'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
+          widget.brand.id == 0
+              ? Container()
+              : SizedBox(
+                  width: 20,
+                ),
+          widget.brand.id == 0
+              ? Container()
+              : Expanded(
+                  child: ElevatedButton(
+                    child: Text('Borrar'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
                         return Color(0xFFB4161B);
-                      }
+                      }),
                     ),
+                    onPressed: () => _confirmDelete(),
                   ),
-                  onPressed: () => _confirmDelete(), 
-              ),
-          ),
+                ),
         ],
       ),
     );
@@ -139,7 +138,7 @@ class _BrandScreenState extends State<BrandScreen> {
       _descriptionShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -154,13 +153,12 @@ class _BrandScreenState extends State<BrandScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -168,11 +166,8 @@ class _BrandScreenState extends State<BrandScreen> {
       'description': _description,
     };
 
-    Response response = await ApiHelper.post(
-      '/api/Brands/', 
-      request, 
-      widget.token
-    );
+    Response response =
+        await ApiHelper.post('/api/Brands/', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -180,13 +175,12 @@ class _BrandScreenState extends State<BrandScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -204,13 +198,12 @@ class _BrandScreenState extends State<BrandScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -220,11 +213,7 @@ class _BrandScreenState extends State<BrandScreen> {
     };
 
     Response response = await ApiHelper.put(
-      '/api/Brands/', 
-      widget.brand.id.toString(), 
-      request, 
-      widget.token
-    );
+        '/api/Brands/', widget.brand.id.toString(), request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -232,13 +221,12 @@ class _BrandScreenState extends State<BrandScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -246,15 +234,14 @@ class _BrandScreenState extends State<BrandScreen> {
   }
 
   void _confirmDelete() async {
-    var response =  await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿Estas seguro de querer borrar el registro?',
-      actions: <AlertDialogAction>[
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message: '¿Estas seguro de querer borrar el registro?',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: 'no', label: 'No'),
           AlertDialogAction(key: 'yes', label: 'Sí'),
-      ]
-    );    
+        ]);
 
     if (response == 'yes') {
       _deleteRecord();
@@ -272,21 +259,17 @@ class _BrandScreenState extends State<BrandScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     Response response = await ApiHelper.delete(
-      '/api/Brands/', 
-      widget.brand.id.toString(), 
-      widget.token
-    );
+        '/api/Brands/', widget.brand.id.toString(), widget.token);
 
     setState(() {
       _showLoader = false;
@@ -294,13 +277,12 @@ class _BrandScreenState extends State<BrandScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 

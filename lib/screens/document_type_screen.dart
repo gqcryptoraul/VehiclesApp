@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
@@ -37,11 +37,9 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.documentType.id == 0 
-            ? 'Nuevo tipo de documento' 
-            : widget.documentType.description
-        ),
+        title: Text(widget.documentType.id == 0
+            ? 'Nuevo tipo de documento'
+            : widget.documentType.description),
       ),
       body: Stack(
         children: [
@@ -51,7 +49,11 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
               _showButtons(),
             ],
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
         ],
       ),
     );
@@ -67,9 +69,7 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
           labelText: 'Descripción',
           errorText: _descriptionShowError ? _descriptionError : null,
           suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _description = value;
@@ -89,32 +89,32 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
               child: Text('Guardar'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFF120E43);
+                }),
               ),
-              onPressed: () => _save(), 
+              onPressed: () => _save(),
             ),
           ),
-          widget.documentType.id == 0 
-            ? Container() 
-            : SizedBox(width: 20,),
-          widget.documentType.id == 0 
-            ? Container() 
-            : Expanded(
-                child: ElevatedButton(
-                  child: Text('Borrar'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
+          widget.documentType.id == 0
+              ? Container()
+              : SizedBox(
+                  width: 20,
+                ),
+          widget.documentType.id == 0
+              ? Container()
+              : Expanded(
+                  child: ElevatedButton(
+                    child: Text('Borrar'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
                         return Color(0xFFB4161B);
-                      }
+                      }),
                     ),
+                    onPressed: () => _confirmDelete(),
                   ),
-                  onPressed: () => _confirmDelete(), 
-              ),
-          ),
+                ),
         ],
       ),
     );
@@ -139,7 +139,7 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
       _descriptionShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -154,13 +154,12 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -168,11 +167,8 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
       'description': _description,
     };
 
-    Response response = await ApiHelper.post(
-      '/api/DocumentTypes/', 
-      request, 
-      widget.token
-    );
+    Response response =
+        await ApiHelper.post('/api/DocumentTypes/', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -180,13 +176,12 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -204,13 +199,12 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -219,12 +213,8 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
       'description': _description,
     };
 
-    Response response = await ApiHelper.put(
-      '/api/DocumentTypes/', 
-      widget.documentType.id.toString(), 
-      request, 
-      widget.token
-    );
+    Response response = await ApiHelper.put('/api/DocumentTypes/',
+        widget.documentType.id.toString(), request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -232,13 +222,12 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -246,15 +235,14 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
   }
 
   void _confirmDelete() async {
-    var response =  await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: '¿Estas seguro de querer borrar el registro?',
-      actions: <AlertDialogAction>[
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message: '¿Estas seguro de querer borrar el registro?',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: 'no', label: 'No'),
           AlertDialogAction(key: 'yes', label: 'Sí'),
-      ]
-    );    
+        ]);
 
     if (response == 'yes') {
       _deleteRecord();
@@ -272,21 +260,17 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     Response response = await ApiHelper.delete(
-      '/api/DocumentTypes/', 
-      widget.documentType.id.toString(), 
-      widget.token
-    );
+        '/api/DocumentTypes/', widget.documentType.id.toString(), widget.token);
 
     setState(() {
       _showLoader = false;
@@ -294,13 +278,12 @@ class _DocumentTypeScreenState extends State<DocumentTypeScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 

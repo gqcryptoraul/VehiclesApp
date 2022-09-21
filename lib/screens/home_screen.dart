@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.blue,
                   child: IconButton(
                     icon: Icon(Icons.call, color: Colors.white,),
-                    onPressed: () => launch("tel://+573223114620"), 
+                    onPressed: () => launch('tel://+573223114620'), 
                   ),
                 ),
               )
@@ -290,11 +292,13 @@ class _HomeScreenState extends State<HomeScreen> {
     ); 
   }
 
+  // ignore: duplicate_ignore
   void _sendMessage() async {
     final link = WhatsAppUnilink(
       phoneNumber: '+573223114620',
       text: 'Hola soy ${widget.token.user.fullName} cliente del taller',
     );
+    // ignore: deprecated_member_use
     await launch('$link');
   }
 }

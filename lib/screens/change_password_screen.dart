@@ -1,5 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicles_app/components/loader_component.dart';
 import 'package:vehicles_app/helpers/api_helper.dart';
@@ -44,13 +46,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         children: <Widget>[
           Column(
             children: <Widget>[
-                _showCurrentPassword(),
-                _showNewPassword(),
-                _showConfirmPassword(),
-                _showButtons(),
+              _showCurrentPassword(),
+              _showNewPassword(),
+              _showConfirmPassword(),
+              _showButtons(),
             ],
           ),
-          _showLoader ? LoaderComponent(text: 'Por favor espere...',) : Container(),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
         ],
       ),
     );
@@ -67,16 +73,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           errorText: _currentPasswordShowError ? _currentPasswordError : null,
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            icon: _passwordShow
+                ? Icon(Icons.visibility)
+                : Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            }, 
+            },
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _currentPassword = value;
@@ -96,16 +102,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           errorText: _newPasswordShowError ? _newPasswordError : null,
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            icon: _passwordShow
+                ? Icon(Icons.visibility)
+                : Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            }, 
+            },
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _newPassword = value;
@@ -125,16 +131,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           errorText: _confirmPasswordShowError ? _confirmPasswordError : null,
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: _passwordShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+            icon: _passwordShow
+                ? Icon(Icons.visibility)
+                : Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
               });
-            }, 
+            },
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
           _confirmPassword = value;
@@ -154,12 +160,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: Text('Cambiar Contraseña'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return Color(0xFF120E43);
-                  }
-                ),
+                    (Set<MaterialState> states) {
+                  return Color(0xFF120E43);
+                }),
               ),
-              onPressed: () => _save(), 
+              onPressed: () => _save(),
             ),
           ),
         ],
@@ -181,7 +186,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (_currentPassword.length < 6) {
       isValid = false;
       _currentPasswordShowError = true;
-      _currentPasswordError = 'Debes ingresar tu actual contraseña de al menos 6 carácteres.';
+      _currentPasswordError =
+          'Debes ingresar tu actual contraseña de al menos 6 carácteres.';
     } else {
       _currentPasswordShowError = false;
     }
@@ -189,7 +195,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (_newPassword.length < 6) {
       isValid = false;
       _newPasswordShowError = true;
-      _newPasswordError = 'Debes ingresar tu nueva contraseña de al menos 6 carácteres.';
+      _newPasswordError =
+          'Debes ingresar tu nueva contraseña de al menos 6 carácteres.';
     } else {
       _newPasswordShowError = false;
     }
@@ -197,7 +204,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (_confirmPassword.length < 6) {
       isValid = false;
       _confirmPasswordShowError = true;
-      _confirmPasswordError = 'Debes ingresar una confirmación de tu nueva contraseña de al menos 6 carácteres.';
+      _confirmPasswordError =
+          'Debes ingresar una confirmación de tu nueva contraseña de al menos 6 carácteres.';
     } else {
       _confirmPasswordShowError = false;
     }
@@ -205,12 +213,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (_confirmPassword != _newPassword) {
       isValid = false;
       _confirmPasswordShowError = true;
-      _confirmPasswordError = 'La nueva contraseña y la confirmación, no son iguales.';
+      _confirmPasswordError =
+          'La nueva contraseña y la confirmación, no son iguales.';
     } else {
       _confirmPasswordShowError = false;
     }
 
-    setState(() { });
+    setState(() {});
     return isValid;
   }
 
@@ -225,13 +234,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _showLoader = false;
       });
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: 'Verifica que estes conectado a internet.',
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
@@ -242,10 +250,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     };
 
     Response response = await ApiHelper.post(
-      '/api/Account/ChangePassword', 
-      request, 
-      widget.token
-    );
+        '/api/Account/ChangePassword', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -253,24 +258,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     if (!response.isSuccess) {
       await showAlertDialog(
-        context: context,
-        title: 'Error', 
-        message: response.message,
-        actions: <AlertDialogAction>[
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
             AlertDialogAction(key: null, label: 'Aceptar'),
-        ]
-      );    
+          ]);
       return;
     }
 
     await showAlertDialog(
-      context: context,
-      title: 'Confirmación', 
-      message: 'Su contraseña ha sido cambiada con éxito.',
-      actions: <AlertDialogAction>[
+        context: context,
+        title: 'Confirmación',
+        message: 'Su contraseña ha sido cambiada con éxito.',
+        actions: <AlertDialogAction>[
           AlertDialogAction(key: null, label: 'Aceptar'),
-      ]
-    );    
+        ]);
 
     Navigator.pop(context, 'yes');
   }
